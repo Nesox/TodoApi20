@@ -14,10 +14,17 @@ function getCount(data) {
     }
 }
 
+$(document).ready(function () {
+    $("#show-completed").change(function () {
+        getData();
+    });
+});
+
 // <snippet_GetData>
 $(document).ready(function () {
     getData();
 });
+
 
 function getData() {
     $.ajax({
@@ -26,10 +33,15 @@ function getData() {
         success: function (data) {
             $('#todos').empty();
             getCount(data.length);
+
+            var showCompleted = $("#show-completed").is(":checked");
             $.each(data, function (key, item) {
                 const checked = item.isComplete ? 'checked' : '';
+                
+                if (item.isComplete && !showCompleted)
+                    return;
 
-                $('<tr><td><input disabled="true" type="checkbox" ' + checked + '></td>' +
+                    $('<tr><td><input disabled="true" type="checkbox" ' + checked + '></td>' +
                     '<td>' + item.name + '</td>' +
                     '<td>' + item.creationTime.substr(11, 8) + '</td>' +
                     '<td><button onclick="editItem(' + item.id + ')">Edit</button></td>' +
