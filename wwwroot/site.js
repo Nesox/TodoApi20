@@ -33,6 +33,7 @@ function getData() {
         success: function (data) {
             $('#todos').empty();
             getCount(data.length);
+            data.sort(function (a, b) { return (a.isComplete ? 1 : 0) - (b.isComplete ? 1 : 0); });
 
             var showCompleted = $("#show-completed").is(":checked");
             $.each(data, function (key, item) {

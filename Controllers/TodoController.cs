@@ -86,7 +86,6 @@ namespace TodoApi.Controllers
 
             todo.IsComplete = item.IsComplete;
             todo.Name = item.Name;
-            todo.CreationTime = item.CreationTime;
 
             _context.TodoItems.Update(todo);
             _context.SaveChanges();
