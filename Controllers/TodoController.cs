@@ -1,29 +1,31 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using TodoApi.Models;
 
 #region TodoController
+
 namespace TodoApi.Controllers
 {
     [Route("api/[controller]")]
     public class TodoController : ControllerBase
     {
         private readonly TodoContext _context;
-        #endregion
 
         public TodoController(TodoContext context)
         {
             _context = context;
 
-            if (_context.TodoItems.Count() == 0)
+            if (!_context.TodoItems.Any())
             {
-                _context.TodoItems.Add(new TodoItem { Name = "Item1" });
+                _context.TodoItems.Add(new TodoItem { Name = "Item1", CreationTime = DateTime.Now });
                 _context.SaveChanges();
             }
         }
 
         #region snippet_GetAll
+
         [HttpGet]
         public List<TodoItem> GetAll()
         {
@@ -31,6 +33,7 @@ namespace TodoApi.Controllers
         }
 
         #region snippet_GetByID
+
         [HttpGet("{id}", Name = "GetTodo")]
         public IActionResult GetById(long id)
         {
@@ -41,10 +44,13 @@ namespace TodoApi.Controllers
             }
             return Ok(item);
         }
+
         #endregion
+
         #endregion
 
         #region snippet_Create
+
         [HttpPost]
         public IActionResult Create([FromBody] TodoItem item)
         {
@@ -53,14 +59,17 @@ namespace TodoApi.Controllers
                 return BadRequest();
             }
 
+            item.CreationTime = DateTime.Now;
             _context.TodoItems.Add(item);
             _context.SaveChanges();
 
             return CreatedAtRoute("GetTodo", new { id = item.Id }, item);
         }
+
         #endregion
 
         #region snippet_Update
+
         [HttpPut("{id}")]
         public IActionResult Update(long id, [FromBody] TodoItem item)
         {
@@ -82,9 +91,11 @@ namespace TodoApi.Controllers
             _context.SaveChanges();
             return NoContent();
         }
+
         #endregion
 
         #region snippet_Delete
+
         [HttpDelete("{id}")]
         public IActionResult Delete(long id)
         {
@@ -98,6 +109,9 @@ namespace TodoApi.Controllers
             _context.SaveChanges();
             return NoContent();
         }
+
         #endregion
     }
 }
+
+#endregion
