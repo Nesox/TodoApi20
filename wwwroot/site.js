@@ -20,12 +20,11 @@ $(document).ready(function () {
     });
 });
 
-// <snippet_GetData>
 $(document).ready(function () {
     getData();
 });
 
-// </snippet_GetData>
+// <snippet_GetData>
 function getData() {
 
     $.ajax({
@@ -60,6 +59,7 @@ function getData() {
         }
     });
 }
+// </snippet_GetData>
 
 // Support for moving items after loading them with ajax up and down.
 $(document).on("click", '.move', function (event) {
