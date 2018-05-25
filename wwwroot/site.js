@@ -25,15 +25,19 @@ $(document).ready(function () {
     getData();
 });
 
-
+// </snippet_GetData>
 function getData() {
+
     $.ajax({
         type: 'GET',
         url: uri,
         success: function (data) {
             $('#todos').empty();
             getCount(data.length);
-            data.sort(function (a, b) { return (a.isComplete ? 1 : 0) - (b.isComplete ? 1 : 0); });
+
+            data.sort(function (a, b) {
+                 return (a.isComplete ? 1 : 0) - (b.isComplete ? 1 : 0);
+            });
 
             var showCompleted = $("#show-completed").is(":checked");
             $.each(data, function (key, item) {
@@ -43,18 +47,29 @@ function getData() {
                     return;
 
                     $('<tr><td><input disabled="true" type="checkbox" ' + checked + '></td>' +
-                    '<td>' + item.name + '</td>' +
-                    '<td>' + item.creationTime.substr(11, 8) + '</td>' +
-                    '<td><button onclick="editItem(' + item.id + ')">Edit</button></td>' +
-                    '<td><button onclick="deleteItem(' + item.id + ')">Delete</button></td>' +
-                    '</tr>').appendTo($('#todos'));
+                        '<td>' + item.name + '</td>' +
+                        '<td>' + item.creationTime.substr(11, 8) + '</td>' +
+                        '<td><button onclick="editItem(' + item.id + ')">Edit</button></td>' +
+                        '<td><button onclick="deleteItem(' + item.id + ')">Delete</button></td>' +
+                        '<td><button class="move up">Up</button></td>' +
+                        '<td><button class="move down">Down</button></td>' +
+                        '</tr>').appendTo($('#todos'));
             });
 
             todos = data;
         }
     });
 }
-// </snippet_GetData>
+
+// Support for moving items after loading them with ajax up and down.
+$(document).on("click", '.move', function (event) {
+    //alert("move button clicked!");
+    var row = $(this).closest('tr');
+    if ($(this).hasClass('up'))
+        row.prev().before(row);
+    else
+        row.next().after(row);
+});
 
 // <snippet_AddItem>
 function addItem() {
